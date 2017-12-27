@@ -1,1 +1,2 @@
-# VNOI All about CODE !
+>> All about CODE <<
+Author: isKOI
