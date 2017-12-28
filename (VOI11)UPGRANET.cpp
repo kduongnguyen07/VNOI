@@ -39,6 +39,7 @@ void dfs(int u, int p) {
 		h[v] = h[u] + 1;
 		ancestor[v][0] = pii(u, c);
 		rep(i, 1, trunc(log2(h[v])) + 1) {
+			if(ancestor[v][i-1] == -1) continue;
 			ancestor[v][i].first = ancestor[ancestor[v][i - 1].first][i - 1].first;
 			ancestor[v][i].second = min(ancestor[ancestor[v][i - 1].first][i - 1].second, ancestor[v][i - 1].second); 
 		}
@@ -89,15 +90,16 @@ int main() {
 			adj[v].push_back(pii(u, c));
 		}
 	}
-    //-----------Query-------------//
-    h[1] = 1;
-    dfs(1, 1);
-	rep(i, 0, m - 1) {
+        //-----------Query-------------//
+	ancestor[1][0] = -1;
+    	h[1] = 1;
+    	dfs(1, 1);
+	    rep(i, 0, m - 1) {
 		if (!inTree[i]) {
-			pii tmp = lca(edge[i].second.first, edge[i].second.second);
+		    pii tmp = lca(edge[i].second.first, edge[i].second.second);
 			ans += max(0, tmp.second - edge[i].first);
 		}
-	}
+	    }
 	cout << ans;
 	//-----------End--------------//
 	return 0;
