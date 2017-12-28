@@ -39,7 +39,6 @@ void dfs(int u, int p) {
 		h[v] = h[u] + 1;
 		ancestor[v][0] = pii(u, c);
 		rep(i, 1, trunc(log2(h[v])) + 1) {
-			if(ancestor[v][i-1] == -1) continue;
 			ancestor[v][i].first = ancestor[ancestor[v][i - 1].first][i - 1].first;
 			ancestor[v][i].second = min(ancestor[ancestor[v][i - 1].first][i - 1].second, ancestor[v][i - 1].second); 
 		}
@@ -71,36 +70,35 @@ pii lca(int u, int v) {
 }
 
 int main() {
-	ios::sync_with_stdio(0); cin.tie(0);
-	cin >> n >> m;
-	root.assign(n + 1, 0); inTree.assign(m + 1, false); h.assign(n + 1, 0);
-	rep(i, 1, n) root[i] = i;
-	rep(i, 1, m) {
-		cin >> u >> v >> c;
-		edge.push_back(make_pair(c, pii(u, v)));
-	}
-	sort(edge.begin(), edge.end(), greater<piii>());
-	/*----------Kruskal-----------*/
-	rep(i, 0, m - 1) {
-		u = edge[i].second.first; v = edge[i].second.second; c = edge[i].first;
-		if(getRoot(u) != getRoot(v)) {
-			join(u, v);
-			inTree[i] = true;
-			adj[u].push_back(pii(v, c));
-			adj[v].push_back(pii(u, c));
-		}
-	}
-        //-----------Query-------------//
-	ancestor[1][0] = -1;
-    	h[1] = 1;
-    	dfs(1, 1);
-	    rep(i, 0, m - 1) {
-		if (!inTree[i]) {
-		    pii tmp = lca(edge[i].second.first, edge[i].second.second);
-			ans += max(0, tmp.second - edge[i].first);
-		}
-	    }
-	cout << ans;
-	//-----------End--------------//
-	return 0;
+    ios::sync_with_stdio(0); cin.tie(0);
+    cin >> n >> m;
+    root.assign(n + 1, 0); inTree.assign(m + 1, false); h.assign(n + 1, 0);
+    rep(i, 1, n) root[i] = i;
+    rep(i, 1, m) {
+    	cin >> u >> v >> c;
+    	edge.push_back(make_pair(c, pii(u, v)));
+    }
+    sort(edge.begin(), edge.end(), greater<piii>());
+    /*----------Kruskal-----------*/
+    rep(i, 0, m - 1) {
+    	u = edge[i].second.first; v = edge[i].second.second; c = edge[i].first;
+    	if(getRoot(u) != getRoot(v)) {
+    		join(u, v);
+    		inTree[i] = true;
+    		adj[u].push_back(pii(v, c));
+    		adj[v].push_back(pii(u, c));
+    	}
+    }
+    //-----------Query-------------//
+    h[1] = 1;
+    dfs(1, 1);
+    rep(i, 0, m - 1) {
+        if (!inTree[i]) {
+            pii tmp = lca(edge[i].second.first, edge[i].second.second);
+            ans += max(0, tmp.second - edge[i].first);
+        }
+    }
+    cout << ans;
+    //-----------End--------------//
+    return 0;
 }
