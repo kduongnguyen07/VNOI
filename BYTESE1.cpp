@@ -17,8 +17,8 @@ int vty[] = {-1,0,1,0};
 int K, m, n, a, b, T;
 
 int main() {
-    freopen("BYTESE1.INP", "r", stdin);
-    freopen("BYTESE1.OUT", "w", stdout);
+    //freopen("BYTESE1.INP", "r", stdin);
+    //freopen("BYTESE1.OUT", "w", stdout);
     cin >> K;
     while(K--) {
         cin >> m >> n;
