@@ -1,2 +1,3 @@
 >> All about CODE <<
-Author: isKOI
+<> Author: itsKoi
+<> FOR MY PARENTS <3 <3
