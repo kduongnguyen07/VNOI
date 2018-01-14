@@ -1,6 +1,4 @@
 - ***All about CODE*** 
- <ul>
-  <li>***Author**: itsKoi*</li>
-  <li>***FOR MY PARENTS <3 <3***</li>
-</ul>
+- ***Author**: itsKoi
+- ***FOR MY PARENTS <3 <3
 <img src="https://i.imgur.com/VqqXQKp.jpg">
