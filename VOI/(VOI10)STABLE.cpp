@@ -1,44 +1,62 @@
 #include <iostream>
-#include <vector>
 #include <cstring>
-#include <algorithm>
+#include <bitset>
 #include <stdio.h>
+#include <vector>
 #include <queue>
+
+#define rep(i, a, b) for (int i = (a); i <= (b); i++)
+#define loop(i, a) for (auto &i: a)
 
 using namespace std;
 
-#define fora(i, a, b) for(int i = a; i <= b; i++)
+typedef long int int32;
+typedef long long int64;
 
-int n, m, s, u, v, ans = 0;
-vector<bool> stable;
-vector<int> trace, d, adj[101010];
-queue<int> q;
+int32 n, m, s, ans, d[10101], L[10101];
+vector<vector<int32>> adj;
+bitset<10101> F[10101], visited;
 
 int main() {
-	ios::sync_with_stdio(0); cin.tie(0);
-	//freopen("STABLE.INP", "r", stdin);
-	cin >> n >> m >> s;
-	fora(i, 1, m) {
-		cin >> u >> v;
-		adj[u].push_back(v);
+	scanf("%ld %ld %ld", &n, &m, &s);
+	adj.assign(n + 2, vector<int32>());
+	rep(i, 1, m) {
+		int32 u, v; scanf("%ld %ld", &u, &v);
+		if (!F[u][v]) {
+			F[u][v] = true;
+			adj[u].push_back(v);
+		}
 	}
-	trace.assign(n + 1, -1); stable.assign(n + 1, false); d.assign(n + 1, 0);
-	trace[s] = s;
-	q.push(s);
+	//
+	queue<int32> q;
+	q.push(s); d[s] = 0;
+	visited[s] = true;
+	memset(d, 0, sizeof d);
 	while(!q.empty()) {
-		u = q.front(); q.pop();
-		vector<int>::iterator it;
-		for (it = adj[u].begin(); it != adj[u].end(); it++) 
-			if (trace[*it] != u) {
-				if (trace[*it] < 0) {
-					q.push(*it);
-					trace[*it] = u;
-					d[*it] = d[u] + 1;
-					stable[*it] = stable[u];
-				} else if (d[u] + 1 == d[*it]) stable[*it] = true;
-			}
+		int32 u = q.front(); q.pop();
+		loop(v, adj[u]) {
+			if (visited[v]) continue;
+			d[v] = d[u] + 1;
+			visited[v] = true;
+			q.push(v);
+		}
 	}
-	fora(i, 1, n) if (stable[i]) ans++;
-	cout << ans;
+	q = queue<int32>();
+	memset(L, 0, sizeof L);
+	visited.reset();
+	q.push(s); L[s] = 1;
+	visited[s] = true;
+	while(!q.empty()) {
+		int32 u = q.front(); q.pop();
+		loop(v, adj[u]) {
+			if (L[v] < 2 && d[v] == d[u] + 1) L[v] += L[u];
+			if (!visited[v]) {
+				visited[v] = true;
+				q.push(v);
+			}
+		}
+	}
+	rep(i, 1, n) if (i != s && L[i] >= 2) ans++;
+	printf("%ld", ans);
 	return 0;
 }
