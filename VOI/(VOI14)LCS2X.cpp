@@ -53,7 +53,7 @@ void subtask1() {
     printf("%d\n", res);
 }
 
-void subtask2() {
+void subtask23() {
     int32 pre, cur, res = 0;
     memset(C, 0, sizeof C);
     rep(i, 1, m) {
@@ -77,7 +77,7 @@ int main() {
         A[0] = B[0] = -1e9;
         // solve
         if (m <= 15 && n <= 15) subtask1();
-        else subtask2();
+        else subtask23();
     }
     return 0;
 }
