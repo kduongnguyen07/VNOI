@@ -4,8 +4,8 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
-
 #define rep(i, a, b) for (int i = (a); i <= (b); i++)
+
 #define rep2(i, a, b) for (int i = (a); i >= (b); i--)
 #define loop(i, a) for (auto &i: a)
 
@@ -45,7 +45,7 @@ int main() {
     //
     int64 ans = 0;
     F[1] = 0;
-    B[1] = A[1];
+    B[1] = A[1];    
     rep(i, 2, n) {
         B[i] = max(B[i - 1] + 1, A[i]);
         F[i] = F[i - 1] + abs(B[i] - A[i]);
