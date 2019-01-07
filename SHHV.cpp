@@ -1,61 +1,53 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <stdio.h>
+#include <cstring>
+#include <vector>
+#include <string>
+#include <sstream>
+
+#define rep(i, a, b) for (int i = (a); i <= (b); i++)
+#define rep2(i, a, b) for (int i = (a); i >= (b); i--)
+#define loop(i, a) for (auto &i: a)
 
 using namespace std;
 
-typedef long long ll;
+typedef long long int64;
 
-const int MAXN = 13;
+int n, A[22]; int64 k, F[22];
 string s;
- 
-ll gt[MAXN+1];
-int n, x, a[MAXN+1], b[MAXN+1], i, j;
-bool chon[MAXN+1];
-ll t;
- 
-void init() {
-    gt[0] = 1;
-    gt[1] = 1;
-    for (int i=2; i<=MAXN; i++) gt[i] = gt[i-1]*i;
-}
- 
-void query1() {
-    ll ans = 0;
-    memset(chon,0,sizeof(chon));
-    for (int i=1; i<=n; i++) {
-        for (int j=1; j<=a[i]-1; j++)
-        if (!chon[j]) {
-            ans += gt[n-i];
-        }
-        chon[a[i]] = 1;
-    }
-    cout << ans+1 << endl;
-}
- 
-void query2() {
-    memset(chon,0,sizeof(chon));
-    t--;
-    for (i=1; i<=n; i++) {
-        int tmp = 0;
-        for (j=1; j<=n; j++) {
-            if (!chon[j]) tmp++;
-            if (gt[n-i]*tmp>t) break;
-        }
-        t -= gt[n-i]*(tmp-1);
-        b[i] = j;
-        chon[j]=1;
-    }
-    for (int i=1; i<=n; i++) cout << b[i] << " ";
-}
- 
+bool exist[22];
+
 int main() {
-    	#ifndef ONLINE_JUDGE
-    	freopen("test.inp", "r", stdin);
-    	freopen("test.out", "w", stdout);
-    	#endif
-    while (cin>>a[++n]);
-    t=a[--n]; n--;
-    init();
-    query1();
-    query2();
+    getline(cin, s); cin >> k;
+    istringstream ss(s); int cur = 0;
+    while (ss >> A[++cur]) {}
+    n = cur - 1;
+
+    // Init
+    F[0] = F[1] = 1;
+    rep(i, 2, 20) F[i] = F[i - 1] * i;
+
+    // Query 1
+    memset(exist, false, sizeof exist);
+    int64 pos = 0;
+    rep(i, 1, n) {
+        rep(j, 1, A[i] - 1) if (!exist[j]) pos += F[n - i];
+        exist[A[i]] = true;
+    }
+    cout << pos + 1 << endl;
+
+    // Query 2
+    memset(exist, false, sizeof exist);
+    k--;
+    rep(i, 1, n) {
+        int tmp = 0;
+        rep(j, 1, n) {
+            if (!exist[j]) tmp++;
+            if (F[n - i] * tmp > k) {
+                cout << j << " ", exist[j] = true;
+                k -= F[n - i] * (tmp - 1); break;
+            }
+        }
+    }
     return 0;
 }
