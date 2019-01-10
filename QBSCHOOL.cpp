@@ -1,55 +1,60 @@
 #include <iostream>
-#include <stdio.h>
+#include <cstring>
 #include <vector>
 #include <algorithm>
 #include <queue>
 #include <functional>
-#include <cstring>
- 
+#include <stdio.h>
+
+#define rep(i, a, b) for (int i = (a); i <= (b); i++)
+#define loop(i, a) for (auto &i: a)
+#define fi first
+#define se second
+
 using namespace std;
- 
-typedef long long ll;
-typedef pair<int,int> pii;
-typedef pair<ll, int> pli;
-vector<pii> adj[10101];
-ll d[10101], f[10101];
-int n, m, u, v, c, _f;
-priority_queue<pli, vector<pli>, greater<pli> > pq;
- 
-ll dijsktra() {
-	pq.push(pii(0, 1)); memset(d, 0x3f, sizeof(d));
-	memset(f, 0, sizeof(f));
-	f[1] = 1;
-	d[1] = 0;
-	while(!pq.empty()) {
-		pli tmp = pq.top(); pq.pop();
-		u = tmp.second; ll du = tmp.first;
-		//if (d[u] != du) continue;
-		if (u == n) return d[n];
-		vector<pii>::iterator it;
-		for (it = adj[u].begin(); it != adj[u].end(); it++) {
-			v = it->first; c= it->second;
-			if (d[v] > d[u] + c) {
-				d[v] = d[u] + c;
-				f[v] = f[u];
-				pq.push(pii(d[v], v));
-			} else if (d[v] == d[u] + c) f[v] += f[u];
-		}
-	}
-	return -1;
-}
- 
- 
+
+typedef long int int32;
+typedef long long int64;
+
+typedef pair<int32, int32> pii;
+typedef pair<int64, int32> pii64;
+
+int32 n, m;
+int64 d[5050], F[5050];
+vector<pii> adj[5050];
+priority_queue<pii64, vector<pii64>, greater<pii64>> pq;
+
 int main() {
-	ios::sync_with_stdio(0); cin.tie(0);
-//	freopen("QBSCHOOL.INP", "r", stdin);
-	cin >> n >> m;
-	for (int i = 1; i <= m; i++) {
-		cin >> _f >> u >> v >> c;
-		adj[u].push_back(pii(v, c));
-		if (_f > 1) adj[v].push_back(pii(u, c));
-	}
-	ll path_min = dijsktra();
-	cout << path_min << " " << f[n];
-	return 0;
+    scanf("%ld %ld", &n, &m);
+    rep(i, 1, m) {
+        int32 u, v, c, t;
+        scanf("%ld %ld %ld %ld", &t, &u, &v, &c);
+        adj[u].push_back(pii(v, c));
+        if (t > 1) adj[v].push_back(pii(u, c));
+    }
+    //Init
+    memset(d, 0x3f3f3f3f3f3f3f3f, sizeof d);
+    memset(F, 0, sizeof F);
+    d[1] = 0, F[1] = 1;
+    pq.push({0, 1});
+    while(!pq.empty()) {
+        pii64 top = pq.top(); pq.pop();
+        int32 u; int64 du;
+        u = top.se, du = top.fi;
+        if (du > d[u]) continue;
+        if (u == n) {
+            printf("%ld %ld", d[u], F[u]);
+            break;
+        }
+        loop(it, adj[u]) {
+            int32 v; int64 c;
+            v = it.fi, c = it.se;
+            if (d[v] > d[u] + c) {
+                d[v] = d[u] + c;
+                F[v] = F[u];
+                pq.push({d[v], v});
+            } else if (d[v] == d[u] + c) F[v] += F[u];
+        }
+    }
+    return 0;
 }

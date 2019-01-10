@@ -1,75 +1,63 @@
 #include <iostream>
-#include <stdio.h>
 #include <cstring>
+#include <stdio.h>
 #include <vector>
-#include <queue>
 #include <algorithm>
 #include <functional>
-#include <iomanip>
-
-using namespace std;
-
-typedef long long ll;
-typedef pair<int, int> pii;
-typedef pair<int, double> pid;
-typedef pair<double, pii> pdii;
+#include <queue>
+#include <bitset>
 
 #define fi first
 #define se second
-#define rep(i, a, b) for (int i = a; i <=b; i++)
+#define rep(i, a, b) for (int i = (a); i <= (b); i++)
+#define loop(i, a) for (auto &i: a)
 
-int n, m, k;
-double d[1010][11];
-bool _free[1010][11];
+using namespace std;
+
+typedef long int int32;
+typedef pair<int32, double> pid;
+typedef pair<int32, int32> pii;
+typedef pair<double, pii> pdii;
+
+int32 n, m, k;
 vector<pid> adj[1010];
-priority_queue< pdii, vector<pdii>, greater<pdii> > pq;
+priority_queue<pdii, vector<pdii>, greater<pdii>> pq;
+double d[1010][20];
+bitset<20> visited[1010];
 
-void Input() {
-    ios::sync_with_stdio(0); cin.tie(0);
-    //freopen("NETACCEL.INP", "r", stdin);
-    cin >> n >> m >> k;
+int main() {
+    scanf("%ld %ld %ld", &n, &m, &k);
     rep(i, 1, m) {
-        int u, v; double c;
-        cin >> u >> v >> c;
-        adj[u].push_back(pid(v, c));
-        adj[v].push_back(pid(u, c));
+        int32 u, v; double c;
+        scanf("%ld %ld %lf", &u, &v, &c);
+        adj[u].push_back({v, c});
+        adj[v].push_back({u, c});
     }
-}
-
-void Init() {
-    memset(_free, true, sizeof(_free));
+    //
     rep(i, 1, n) rep(j, 0, k) d[i][j] = 1e9;
     rep(i, 0, k) d[1][i] = 0;
-}
-
-void Compute() {
-    rep(i, 0, k) pq.push(make_pair(0, pii(1, i)));
+    rep(i, 0, k) pq.push({0 ,{1, i}});
     while(!pq.empty()) {
-        pdii tmp = pq.top(); pq.pop();
-        int u = tmp.se.fi;
-        int x = tmp.se.se;
-        if(x == k && u == n) {
-            cout << fixed << setprecision(2) << d[n][k]; return;
+        pdii top = pq.top(); pq.pop();
+        int32 u, t; double du;
+        du = top.fi, u = top.se.fi, t = top.se.se;
+        if (du > d[u][t]) continue;
+        if (t == k && u == n) {
+            printf("%.2f", d[u][t]);
+            break;
         }
-        _free[u][x] = false;
-        vector<pid>::iterator it;
-        for (it = adj[u].begin(); it != adj[u].end(); it++) {
-            int v = it->fi; double c = it->se;
-            double update = 1;
-            rep(i, x, k) {
-                if(_free[v][i] && d[v][i] > d[u][x] + c / update) {
-                    d[v][i] = d[u][x] + c / update;
-                    pq.push(make_pair(d[v][i], pid(v, i)));
+        visited[u][t] = true;
+        loop(it, adj[u]) {
+            int32 v = it.fi; double c = it.se;
+            double moderm = 1;
+            rep(j, t, k) {
+                if (!visited[v][j] && d[v][j] > d[u][t] + (c / moderm)) {
+                    d[v][j] = d[u][t] + (c / moderm);
+                    pq.push({d[v][j], {v, j}});
                 }
-                update *= 2;
+                moderm *= 2;
             }
         }
     }
-}
-
-int main() {
-    Input();
-    Init();
-    Compute();
     return 0;
 }
